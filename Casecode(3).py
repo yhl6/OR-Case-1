@@ -50,15 +50,10 @@ x = []
 count = []
 for i in ProductID:
     x.append([])  # 十個list
-    # count.append([])
-
     for k in Shipping_method:
         x[i].append([])
-        # count[i].append([])      #三個list
-
         for t in MonthID:
             x[i][k].append(eg1.addVar(lb=0, vtype=GRB.CONTINUOUS, name="x" + str(i + 1) + str(k) + str(t + 3)))
-        # count[i][k].append("x" + str(i+1)+ str(k+1)+ str(t))
 
 # Z binary 變數
 z = []
@@ -73,6 +68,7 @@ for i in ProductID:
     y.append([])
     for t in MonthID:
         y[i].append(eg1.addVar(vtype=GRB.CONTINUOUS, name="y" + str(i + 1) + str(t + 3)))
+
 # g 高斯符號取整數
 g = []
 for t in MonthID:
@@ -85,8 +81,8 @@ for i in ProductID:
     Yp.append([])
     Yn.append([])
     for t in MonthID:
-        Yp.append(eg1.addVar(lb=0, vtype=GRB.CONTINUOUS, name="y+" + str(i + 1) + str(t + 3)))
-        Yn.append(eg1.addVar(lb=0, vtype=GRB.CONTINUOUS, name="y-" + str(i + 1) + str(t + 3)))
+        Yp[i].append(eg1.addVar(lb=0, vtype=GRB.CONTINUOUS, name="y+" + str(i + 1) + str(t + 3)))
+        Yn[i].append(eg1.addVar(lb=0, vtype=GRB.CONTINUOUS, name="y-" + str(i + 1) + str(t + 3)))
 
 # setting the objective function
 # 初始存貨 Initial_Inventory
@@ -95,8 +91,8 @@ for i in ProductID:
 # 售價、購買成本、期末持有成本 Sales_price、Purchasing_cost、Holding_cost
 
 eg1.setObjective(
-    quicksum(Express_delivery[i] * x[i][0][t] for i in ProductID for t in MonthID)  # 變動成本
-    + quicksum(Air_freight[i] * x[i][1][t] for i in ProductID for t in MonthID)
+    quicksum(Express_delivery[i] * quicksum(x[i][0][t] for t in MonthID) for i in ProductID)  # 變動成本
+    + quicksum(Air_freight[i] * quicksum(x[i][1][t] for t in MonthID) for i in ProductID)
     + quicksum(g[t] * 2750 for t in MonthID)
     + quicksum(Fixed_cost[k] * z[k][t] for k in Shipping_method for t in MonthID)  # 固定成本
     + quicksum(Purchasing_cost[i] * x[i][k][t] for i in ProductID for k in Shipping_method for t in MonthID)  # 購買成本
@@ -113,6 +109,8 @@ eg1.addConstrs((y[i][t] == y[i][t - 1] + sum(x[i][k][t - k - 1] for k in Shippin
 eg1.addConstrs(g[t] >= quicksum(Cubic_meter[i] * x[i][2][t] for i in ProductID) / 30 for t in MonthID)
 eg1.addConstrs(
     g[t] <= quicksum(Cubic_meter[i] * x[i][2][t] for i in ProductID) / 30 + 0.99999999999999 for t in MonthID)
+eg1.addConstrs(Yp[i][t] >= y[i][t] for i in ProductID for t in MonthID)
+eg1.addConstrs(Yn[i][t] >= -y[i][t] for i in ProductID for t in MonthID)
 
 for t in MonthID:
     for k in Shipping_method:
@@ -125,8 +123,7 @@ eg1.optimize()
 for i in ProductID:
     for k in Shipping_method:
         for t in MonthID:
-            if k == 2:
-                print('X', i + 1, k + 1, t + 3, x[i][k][t].x)
+            print('X', i + 1, k + 1, t + 3, x[i][k][t].x)
 
 for t in MonthID:
     total = 0
