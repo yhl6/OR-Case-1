@@ -57,7 +57,7 @@ for i in ProductID:
         # count[i].append([])      #三個list
 
         for t in MonthID:
-            x[i][k].append(eg1.addVar(lb=0, vtype=GRB.INTEGER, name="x" + str(i + 1) + str(k) + str(t + 3)))
+            x[i][k].append(eg1.addVar(lb=0, vtype=GRB.CONTINUOUS, name="x" + str(i + 1) + str(k) + str(t + 3)))
         # count[i][k].append("x" + str(i+1)+ str(k+1)+ str(t))
 
 # Z binary 變數
@@ -96,12 +96,30 @@ eg1.addConstrs((y[i][2] == y[i][1] + x[i][0][1] + x[i][1][0] - Demandlist[i][2] 
 eg1.addConstrs((y[i][t] == y[i][t - 1] + quicksum(x[i][k][t - k - 1] for k in Shipping_method) - Demandlist[i][t]
                 for i in ProductID for t in range(3, 6)), "ending inventory")
 
-eg1.addConstr((quicksum(x[i][k][t] for i in ProductID for k in Shipping_method for t in MonthID) <= quicksum(Demandlist[i][t] * z[k][t] for i in ProductID for t in MonthID)),'Z constraint')
+for k in Shipping_method:
+    for t in MonthID:
+        eg1.addConstr(quicksum(x[i][k][t] for i in ProductID) <= (quicksum(Demandlist[i][t] for i in ProductID for t in MonthID)
+                                                                  - quicksum(Initial_Inventory[i] for i in ProductID)) * z[k][t])
 eg1.optimize()
 
 for i in ProductID:
-    for k in Shipping_method:
-        for t in MonthID:
-            print('X', i + 1, k + 1, t + 3, x[i][k][t].x)
+    if i != 9:
+        print(str(i + 1) + '   ', end='')
+    else:
+        print(str(i + 1) + '  ', end='')
+    for t in MonthID:
+        for k in Shipping_method:
+            if x[i][k][t].x <= 10:
+                print(x[i][k][t].x, end='   ')
+            elif x[i][k][t].x >= 100:
+                print(x[i][k][t].x, end=' ')
+            else:
+                print(x[i][k][t].x, end='  ')
+
+    print('')
+print('-----------')
+for k in Shipping_method:
+    for t in MonthID:
+        print('z', k + 1, t + 3, z[k][t].x)
 
 print('z=', eg1.objVal)

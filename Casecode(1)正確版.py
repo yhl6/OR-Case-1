@@ -126,10 +126,5 @@ for k in Shipping_method:
 	for t in MonthID:
 		print('Z',k+1,t+3,z[k][t].x)
 
-for i in ProductID:
-	for k in Shipping_method:
-		for t in MonthID:
-			print('X',i+1,k+1,t+3,x[i][k][t].x)
-
 print('z=',eg1.objVal)
 
