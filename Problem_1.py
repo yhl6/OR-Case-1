@@ -96,13 +96,12 @@ eg1.setObjective(
 eg1.addConstrs((y[i][0] == Initial_Inventory[i] - Demandlist[i][0] for i in ProductID),'March')
 eg1.addConstrs((y[i][1] == y[i][0] + x[i][0][0] - Demandlist[i][1] + April_intransit[i] for i in ProductID),'April')
 eg1.addConstrs((y[i][2] == y[i][1] + x[i][0][1] + x[i][1][0] - Demandlist[i][2] + May_intransit[i] for i in ProductID),'May')
-eg1.addConstrs((y[i][t] == y[i][t-1] + sum(x[i][k][t-k-1] for k in Shipping_method) - Demandlist[i][t]
+eg1.addConstrs((y[i][t] == y[i][t-1] + quicksum(x[i][k][t-k-1] for k in Shipping_method) - Demandlist[i][t]
                     for i in ProductID  for t in range(3,6)),"ending inventory")
 
 for t in MonthID:
 	for k in Shipping_method:
-		eg1.addConstr((quicksum(x[i][k][t] for i in ProductID) <= quicksum((Demandlist[i][t]) * z[k][t] for i in ProductID)
-		),'Z constraint')
+		eg1.addConstrs((quicksum(x[i][k][t] for i in ProductID) <= quicksum(Demandlist[i][t] * z[k][t] for i in ProductID) for i in ProductID), 'Z constraint')
 
 
 eg1.optimize()
