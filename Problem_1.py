@@ -95,9 +95,8 @@ eg1.addConstrs((y[i][2] == y[i][1] + x[i][0][1] + x[i][1][0] - Demandlist[i][2] 
                'May')
 eg1.addConstrs((y[i][t] == y[i][t - 1] + quicksum(x[i][k][t - k - 1] for k in Shipping_method) - Demandlist[i][t]
                 for i in ProductID for t in range(3, 6)), "ending inventory")
-eg1.addConstrs((quicksum(x[i][k][t] for i in ProductID) <= quicksum(Demandlist[i][t] for i in ProductID) * z[k][t]
-                for k in Shipping_method for t in MonthID), 'Z constraint')
 
+eg1.addConstr((quicksum(x[i][k][t] for i in ProductID for k in Shipping_method for t in MonthID) <= quicksum(Demandlist[i][t] * z[k][t] for i in ProductID for t in MonthID)),'Z constraint')
 eg1.optimize()
 
 for i in ProductID:
