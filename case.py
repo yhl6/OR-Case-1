@@ -79,4 +79,5 @@ for t in MonthID[3:]:
     eg1.addConstrs((y[i][t] == (y[i][t - 1] + quicksum(x[i][k][t - k] for k in ShippingID) - Demand.iloc[i, t]) for i in
                     ProductID), 'Ending_inv_' + str(Demand.columns[t][:3]))
 
+f
 eg1.optimize()
