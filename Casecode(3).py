@@ -53,7 +53,7 @@ for i in ProductID:
     for k in Shipping_method:
         x[i].append([])
         for t in MonthID:
-            x[i][k].append(eg1.addVar(lb=0, vtype=GRB.CONTINUOUS, name="x" + str(i + 1) + str(k) + str(t + 3)))
+            x[i][k].append(eg1.addVar(lb=0, vtype=GRB.INTEGER, name="x" + str(i + 1) + str(k) + str(t + 3)))
 
 # Z binary 變數
 z = []
@@ -67,7 +67,7 @@ y = []
 for i in ProductID:
     y.append([])
     for t in MonthID:
-        y[i].append(eg1.addVar(vtype=GRB.CONTINUOUS, name="y" + str(i + 1) + str(t + 3)))
+        y[i].append(eg1.addVar(vtype=GRB.INTEGER, name="y" + str(i + 1) + str(t + 3)))
 
 # g 高斯符號取整數
 g = []
@@ -81,8 +81,8 @@ for i in ProductID:
     Yp.append([])
     Yn.append([])
     for t in MonthID:
-        Yp[i].append(eg1.addVar(lb=0, vtype=GRB.CONTINUOUS, name="y+" + str(i + 1) + str(t + 3)))
-        Yn[i].append(eg1.addVar(lb=0, vtype=GRB.CONTINUOUS, name="y-" + str(i + 1) + str(t + 3)))
+        Yp[i].append(eg1.addVar(lb=0, vtype=GRB.INTEGER, name="y+" + str(i + 1) + str(t + 3)))
+        Yn[i].append(eg1.addVar(lb=0, vtype=GRB.INTEGER, name="y-" + str(i + 1) + str(t + 3)))
 
 # setting the objective function
 # 初始存貨 Initial_Inventory
@@ -101,10 +101,10 @@ eg1.setObjective(
 
 # add constraints and name them
 eg1.addConstrs((y[i][0] == Initial_Inventory[i] - Demandlist[i][0] for i in ProductID), 'March')
-eg1.addConstrs((y[i][1] == Yp[i][0] + x[i][0][0] - Demandlist[i][1] + April_intransit[i] for i in ProductID), 'April')
-eg1.addConstrs((y[i][2] == Yp[i][1] + x[i][0][1] + x[i][1][0] - Demandlist[i][2] + May_intransit[i] for i in ProductID),
+eg1.addConstrs((y[i][1] == y[i][0] + x[i][0][0] - Demandlist[i][1] + April_intransit[i] for i in ProductID), 'April')
+eg1.addConstrs((y[i][2] == y[i][1] + x[i][0][1] + x[i][1][0] - Demandlist[i][2] + May_intransit[i] for i in ProductID),
                'May')
-eg1.addConstrs((y[i][t] == Yp[i][t - 1] + quicksum(x[i][k][t - k - 1] for k in Shipping_method) - Demandlist[i][t]
+eg1.addConstrs((y[i][t] == y[i][t - 1] + quicksum(x[i][k][t - k - 1] for k in Shipping_method) - Demandlist[i][t]
                 for i in ProductID for t in range(3, 6)), "ending inventory")
 eg1.addConstrs(g[t] >= quicksum(Cubic_meter[i] * x[i][2][t] for i in ProductID) / 30 for t in MonthID)
 eg1.addConstrs(
@@ -112,18 +112,31 @@ eg1.addConstrs(
 eg1.addConstrs(Yp[i][t] >= y[i][t] for i in ProductID for t in MonthID)
 eg1.addConstrs(Yn[i][t] >= -y[i][t] for i in ProductID for t in MonthID)
 
-for t in MonthID:
-    for k in Shipping_method:
+for k in Shipping_method:
+    for t in MonthID:
         eg1.addConstr(
-            (quicksum(x[i][k][t] for i in ProductID) <= quicksum((Demandlist[i][t]) * z[k][t] for i in ProductID)
-             ), 'Z constraint')
+            quicksum(x[i][k][t] for i in ProductID) <= (quicksum(Demandlist[i][t] for i in ProductID for t in MonthID)
+                                                        - quicksum(Initial_Inventory[i] for i in ProductID)) * z[k][t])
 
 eg1.optimize()
 
 for i in ProductID:
-    for k in Shipping_method:
-        for t in MonthID:
-            print('X', i + 1, k + 1, t + 3, x[i][k][t].x)
+    if i != 9:
+        print(str(i + 1) + '   ', end='')
+    else:
+        print(str(i + 1) + '  ', end='')
+    for t in MonthID:
+        for k in Shipping_method:
+            if x[i][k][t].x <= 10:
+                print(x[i][k][t].x, end='   ')
+            elif x[i][k][t].x >= 100:
+                print(x[i][k][t].x, end=' ')
+            else:
+                print(x[i][k][t].x, end='  ')
+
+    print('')
+print('-----------')
+
 
 for t in MonthID:
     total = 0
@@ -134,10 +147,10 @@ for t in MonthID:
 
 print('z=', eg1.objVal)
 
-for i in ProductID:
-    for t in MonthID:
-        print('------------')
-        print(i, t, ":", y[i][t].x)
-        print(i, t, ":", Yp[i][t].x)
-        print(i, t, ":", Yn[i][t].x)
-        print('------------')
+# for i in ProductID:
+#     for t in MonthID:
+#         print('------------')
+#         print(i, t, ":", y[i][t].x)
+#         print(i, t, ":", Yp[i][t].x)
+#         print(i, t, ":", Yn[i][t].x)
+#         print('------------')
