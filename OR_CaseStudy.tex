@@ -1,0 +1,198 @@
+\documentclass[12pt,a4paper]{article}
+\title{OR 2021 - Case Study 1}
+\usepackage[a4paper, margin=0.8in]{geometry}
+\usepackage{amsmath}
+\usepackage{CJKutf8}
+\DeclareUnicodeCharacter{2212}{-}
+\DeclareUnicodeCharacter{2265}{-}
+\DeclareUnicodeCharacter{2208}{-}
+
+\begin{document}
+\maketitle
+\begin{CJK}{UTF8}{bsmi}
+\begin{flushright}
+李妍伶 地理三 B07208017\\
+林詠弘 地理三 B07208030\\
+李宇軒 會計三 B07702060\\
+鐘靖詮 會計三 B07702120\\
+陳品昇 會計三 B07702086\\
+\end{flushright}
+\end{CJK}
+\fontsize{12}{20pt}\selectfont
+
+\section{Basic ordering process}
+\subsection*{Problem 1}
+
+Given all the data and rules above, you now need to come up with an ordering plan for
+the next coming six months. In particular, at the beginning of each month, you need
+to determine for each product how many to order through each of the three shipping
+methods. Your goal is to minimize total cost while ensuring that all demands are satisfied.\\
+
+Let\\
+
+\begin{equation*}
+\begin{aligned}
+\mbox{min} \quad &\sum_{t \in T}\sum_{k \in K}\sum_{i \in I}C_ix_{ikt} + H\sum_{i \in I}(C_i\sum_{t \in T}y_{it}) + \sum_{t\in T}^{}(\sum_{k\in K}^{}F_kz_{kt}+ \sum_{i \in I}^{}\sum_{k=1}^{2} V_{ik}x_{ikt})\\ 
+\mbox{s.t.} \quad 
+&y_{i2} = I_{i}\qquad\forall i \in I\\
+&y_{it} = y_{i,t-1} + \sum_{k \in K}^{} x_{i,k,t-k} - D_{it} + W_{it}\qquad \forall i \in I, t \in T\\
+&x_{ikt} = 0\qquad\forall i \in I, k \in K,t=0,1,2\\
+&\sum_{i \in I}^{} x_{ikt} \leq \sum_{i \in I}^{}D_{i}z_{kt} \qquad \forall k \in K, t \in T\\
+&y_{it} \geq 0 \qquad \forall i \in I, t \in T\\
+&x_{ikt} \geq 0 \qquad \forall i \in I, t \in T, k \in K\\
+&z_{kt} \in \{0, 1\} \qquad \forall k \in K, t \in T\\
+\end{aligned}
+\end{equation*}
+
+
+\begin{table}[]
+\setlength{\tabcolsep}{1mm}{
+\begin{tabular}{ccccllcccclccclccclccccc}
+\hline
+        & \multicolumn{23}{c}{Order Quantity}                                                                                                                                                                                                                                                                 \\ \cline{2-24} 
+Product & \multicolumn{3}{c}{March} &  & \multicolumn{3}{c}{April}         & \multicolumn{1}{l}{} & \multicolumn{3}{c}{May}           & \multicolumn{1}{l}{} & \multicolumn{3}{c}{June}         & \multicolumn{1}{l}{} & \multicolumn{3}{c}{July}         & \multicolumn{1}{l}{} & \multicolumn{3}{c}{August} \\ \cline{2-4} \cline{6-8} \cline{10-12} \cline{14-16} \cline{18-20} \cline{22-24} 
+        & ED     & AF      & OF     &  & \multicolumn{1}{c}{ED} & AF & OF  & \multicolumn{1}{l}{} & ED & \multicolumn{1}{c}{AF} & OF  & \multicolumn{1}{l}{} & ED & \multicolumn{1}{c}{AF} & OF & \multicolumn{1}{l}{} & ED & \multicolumn{1}{c}{AF} & OF & \multicolumn{1}{l}{} & ED      & AF      & OF     \\ \hline
+1       & 0      & 0       & 0      &  & 0                      & 0  & 0   &                      & 0  & 0                      & 38  &                      & 0  & 0                      & 0  &                      & 0  & 0                      & 0  &                      & 0       & 0       & 0      \\
+2       & 0      & 0       & 0      &  & 0                      & 0  & 0   &                      & 0  & 0                      & 45  &                      & 0  & 0                      & 0  &                      & 0  & 0                      & 0  &                      & 0       & 0       & 0      \\
+3       & 0      & 0       & 0      &  & 0                      & 0  & 82  &                      & 0  & 0                      & 200 &                      & 0  & 0                      & 0  &                      & 0  & 0                      & 0  &                      & 0       & 0       & 0      \\
+4       & 0      & 0       & 0      &  & 0                      & 0  & 97  &                      & 0  & 0                      & 155 &                      & 0  & 0                      & 0  &                      & 0  & 0                      & 0  &                      & 0       & 0       & 0      \\
+5       & 0      & 0       & 0      &  & 0                      & 0  & 67  &                      & 0  & 0                      & 49  &                      & 0  & 0                      & 0  &                      & 0  & 0                      & 0  &                      & 0       & 0       & 0      \\
+6       & 0      & 0       & 0      &  & 0                      & 0  & 0   &                      & 0  & 0                      & 154 &                      & 0  & 0                      & 0  &                      & 0  & 0                      & 0  &                      & 0       & 0       & 0      \\
+7       & 0      & 0       & 0      &  & 0                      & 0  & 0   &                      & 0  & 0                      & 172 &                      & 0  & 0                      & 0  &                      & 0  & 0                      & 0  &                      & 0       & 0       & 0      \\
+8       & 0      & 0       & 61     &  & 0                      & 0  & 168 &                      & 0  & 0                      & 32  &                      & 0  & 0                      & 0  &                      & 0  & 0                      & 0  &                      & 0       & 0       & 0      \\
+9       & 0      & 0       & 0      &  & 0                      & 0  & 0   &                      & 0  & 0                      & 94  &                      & 0  & 0                      & 0  &                      & 0  & 0                      & 0  &                      & 0       & 0       & 0      \\
+10      & 24     & 162     & 200    &  & 0                      & 0  & 154 &                      & 0  & 0                      & 199 &                      & 0  & 0                      & 0  &                      & 0  & 0                      & 0  &                      & 0       & 0       & 0      \\ \hline
+\end{tabular}}
+\end{table}
+
+\section{Adding container costs}
+\subsection*{Problem 2}
+Again, given all the data and rules above, you now need to come up with another ordering
+plan for the next coming six months. In particular, at the beginning of each month, you
+need to determine for each product how many to order through each of the three shipping
+methods. Your goal is to minimize total cost while ensuring that all demands are satisfied.\\
+
+Let\\
+
+\begin{equation*}
+\begin{aligned}
+\mbox{min} \quad &\sum_{t \in T}\sum_{k \in K}\sum_{i \in I}C_ix_{ikt} + H\sum_{i \in I}(C_i\sum_{t \in T}y_{it}) + \sum_{t\in T}^{}[\sum_{k\in K}^{}F_kz_{kt}+ \sum_{i \in I}^{}(\sum_{k=1}^{2} V_{ik}x_{ikt}+2750\times\lceil \frac{V_{i3}x_{i3t}}{30} \rceil)]\\ 
+\mbox{s.t.} \quad 
+&y_{i2} = I_{i}\qquad\forall i \in I\\
+&y_{it} = y_{i,t-1} + \sum_{k \in K}^{} x_{i,k,t-k} - D_{it} + W_{it}\qquad \forall i \in I, t \in T\\
+&x_{ikt} = 0\qquad\forall i \in I, k \in K,t=0,1,2\\
+&\sum_{i \in I}^{} x_{ikt} \leq \sum_{i \in I}^{}D_{i}z_{kt} \qquad \forall k \in K, t \in T\\
+&y_{it} \geq 0 \qquad \forall i \in I, t \in T\\
+&x_{ikt} \geq 0 \qquad \forall i \in I, t \in T, k \in K\\
+&z_{kt} \in \{0, 1\} \qquad \forall k \in K, t \in T\\
+\end{aligned}
+\end{equation*}
+
+\begin{table}[]
+\setlength{\tabcolsep}{1mm}{
+\begin{tabular}{cccclllcccccllcccclccccl}
+\hline
+        & \multicolumn{23}{c}{Order Quantity}                                                                                                                                                                                                                                                             \\ \cline{2-24} 
+Product & \multicolumn{3}{c}{March} &  & \multicolumn{3}{c}{April}                             & \multicolumn{1}{l}{} & \multicolumn{3}{c}{May} &  & \multicolumn{3}{c}{June}         & \multicolumn{1}{l}{} & \multicolumn{3}{c}{July}         & \multicolumn{1}{l}{} & \multicolumn{3}{c}{August}       \\ \cline{2-4} \cline{6-8} \cline{10-12} \cline{14-16} \cline{18-20} \cline{22-24} 
+        & ED     & AF      & OF     &  & \multicolumn{1}{c}{ED} & \multicolumn{1}{c}{AF} & OF  & \multicolumn{1}{l}{} & ED    & AF     & OF     &  & \multicolumn{1}{c}{ED} & AF & OF & \multicolumn{1}{l}{} & ED & \multicolumn{1}{c}{AF} & OF & \multicolumn{1}{l}{} & ED & AF & \multicolumn{1}{c}{OF} \\ \hline
+1       & 0      & 0       & 0      &  & 0                      & 0                      & 0   &                      & 0     & 0      & 38     &  & 0                      & 0  & 0  &                      & 0  & 0                      & 0  &                      & 0  & 0  & 0                      \\
+2       & 0      & 0       & 0      &  & 0                      & 0                      & 0   &                      & 0     & 0      & 45     &  & 0                      & 0  & 0  &                      & 0  & 0                      & 0  &                      & 0  & 0  & 0                      \\
+3       & 0      & 0       & 0      &  & 0                      & 0                      & 82  &                      & 0     & 0      & 200    &  & 0                      & 0  & 0  &                      & 0  & 0                      & 0  &                      & 0  & 0  & 0                      \\
+4       & 0      & 0       & 0      &  & 0                      & 0                      & 97  &                      & 0     & 0      & 155    &  & 0                      & 0  & 0  &                      & 0  & 0                      & 0  &                      & 0  & 0  & 0                      \\
+5       & 0      & 0       & 0      &  & 0                      & 0                      & 67  &                      & 0     & 0      & 49     &  & 0                      & 0  & 0  &                      & 0  & 0                      & 0  &                      & 0  & 0  & 0                      \\
+6       & 0      & 0       & 0      &  & 0                      & 0                      & 0   &                      & 0     & 0      & 154    &  & 0                      & 0  & 0  &                      & 0  & 0                      & 0  &                      & 0  & 0  & 0                      \\
+7       & 0      & 0       & 0      &  & 0                      & 0                      & 0   &                      & 0     & 0      & 172    &  & 0                      & 0  & 0  &                      & 0  & 0                      & 0  &                      & 0  & 0  & 0                      \\
+8       & 0      & 0       & 61     &  & 0                      & 0                      & 168 &                      & 0     & 0      & 32     &  & 0                      & 0  & 0  &                      & 0  & 0                      & 0  &                      & 0  & 0  & 0                      \\
+9       & 0      & 0       & 0      &  & 0                      & 0                      & 0   &                      & 0     & 0      & 94     &  & 0                      & 0  & 0  &                      & 0  & 0                      & 0  &                      & 0  & 0  & 0                      \\
+10      & 24     & 162     & 200    &  & 0                      & 0                      & 36  &                      & 0     & 118    & 199    &  & 0                      & 0  & 0  &                      & 0  & 0                      & 0  &                      & 0  & 0  & 0                      \\ \hline
+\end{tabular}}
+\end{table}
+
+\section{Allowing shortage and assuming all shortages are lost sales}
+\subsection*{Problem 3}
+Again, given all the data and rules above, you now need to come up with another ordering
+plan for the next coming six months. In particular, at the beginning of each month, you
+need to determine for each product how many to order through each of the three shipping
+methods. As shortage is allowed now, your goal is to minimize total cost by making tradeoff between all the related costs.\\
+
+Let\\
+
+\begin{equation*}\\
+\begin{aligned}
+\mbox{min} \quad &\sum_{t \in T}\sum_{k \in K}\sum_{i \in I}C_ix_{ikt} + H\sum_{i \in I}(C_i\sum_{t \in T}y_{it}^+) + \sum_{i \in I}(P_i-C_i)\sum_{t \in T}y_{it}^-\\ &+ \sum_{t\in T}^{}[\sum_{k\in K}^{}F_kz_{kt}+ \sum_{i \in I}^{}(\sum_{k=1}^{2} V_{ik}x_{ikt}+2750\times\lceil \frac{V_{i3}x_{i3t}}{30} \rceil)]\\
+\mbox{s.t.} \quad &y_{i2} = I_{i}\qquad\forall i \in I\\
+&y_{it} = y_{i,t-1}+ \sum_{k \in K}^{} x_{i,k,t-k} - D_{it} + W_{it}\qquad \forall i \in I, t \in T\\
+&x_{ikt} = 0\qquad\forall i \in I, k \in K, t=0,1,2\\
+&y_{it}^+ \geq y_{it} \quad \forall i \in I \quad \forall t \in T\\
+&y_{it}^+ \geq 0  \quad \forall i \in I \quad \forall t \in T\\
+&y_{it}^- \geq -y_{it}  \quad \forall i \in I \quad \forall t \in T\\
+&y_{it}^- \geq 0  \quad \forall i \in I \quad \forall t \in T\\
+&y_{it} \quad urs. \quad \forall i \in I \quad \forall t \in T\\
+\end{aligned}
+\end{equation*}
+
+\begin{table}[]
+\setlength{\tabcolsep}{1mm}{
+\begin{tabular}{cccclllcccccllcccclccccl}
+\hline
+        & \multicolumn{23}{c}{Order Quantity}                                                                                                                                                                                                                                                             \\ \cline{2-24} 
+Product & \multicolumn{3}{c}{March} &  & \multicolumn{3}{c}{April}                             & \multicolumn{1}{l}{} & \multicolumn{3}{c}{May} &  & \multicolumn{3}{c}{June}         & \multicolumn{1}{l}{} & \multicolumn{3}{c}{July}         & \multicolumn{1}{l}{} & \multicolumn{3}{c}{August}       \\ \cline{2-4} \cline{6-8} \cline{10-12} \cline{14-16} \cline{18-20} \cline{22-24} 
+        & ED     & AF      & OF     &  & \multicolumn{1}{c}{ED} & \multicolumn{1}{c}{AF} & OF  & \multicolumn{1}{l}{} & ED    & AF     & OF     &  & \multicolumn{1}{c}{ED} & AF & OF & \multicolumn{1}{l}{} & ED & \multicolumn{1}{c}{AF} & OF & \multicolumn{1}{l}{} & ED & AF & \multicolumn{1}{c}{OF} \\ \hline
+1       & 0      & 0       & 0      &  & 0                      & 0                      & 0   &                      & 0     & 0      & 38     &  & 0                      & 0  & 0  &                      & 0  & 0                      & 0  &                      & 0  & 0  & 0                      \\
+2       & 0      & 0       & 0      &  & 0                      & 0                      & 0   &                      & 0     & 0      & 45     &  & 0                      & 0  & 0  &                      & 0  & 0                      & 0  &                      & 0  & 0  & 0                      \\
+3       & 0      & 0       & 0      &  & 0                      & 0                      & 82  &                      & 0     & 0      & 200    &  & 0                      & 0  & 0  &                      & 0  & 0                      & 0  &                      & 0  & 0  & 0                      \\
+4       & 0      & 0       & 0      &  & 0                      & 0                      & 97  &                      & 0     & 0      & 155    &  & 0                      & 0  & 0  &                      & 0  & 0                      & 0  &                      & 0  & 0  & 0                      \\
+5       & 0      & 0       & 0      &  & 0                      & 0                      & 67  &                      & 0     & 0      & 49     &  & 0                      & 0  & 0  &                      & 0  & 0                      & 0  &                      & 0  & 0  & 0                      \\
+6       & 0      & 0       & 0      &  & 0                      & 0                      & 0   &                      & 0     & 0      & 154    &  & 0                      & 0  & 0  &                      & 0  & 0                      & 0  &                      & 0  & 0  & 0                      \\
+7       & 0      & 0       & 0      &  & 0                      & 0                      & 0   &                      & 0     & 0      & 172    &  & 0                      & 0  & 0  &                      & 0  & 0                      & 0  &                      & 0  & 0  & 0                      \\
+8       & 0      & 0       & 61     &  & 0                      & 0                      & 168 &                      & 0     & 0      & 32     &  & 0                      & 0  & 0  &                      & 0  & 0                      & 0  &                      & 0  & 0  & 0                      \\
+9       & 0      & 0       & 0      &  & 0                      & 0                      & 0   &                      & 0     & 0      & 94     &  & 0                      & 0  & 0  &                      & 0  & 0                      & 0  &                      & 0  & 0  & 0                      \\
+10      & 24     & 162     & 200    &  & 0                      & 0                      & 36  &                      & 0     & 118    & 199    &  & 0                      & 0  & 0  &                      & 0  & 0                      & 0  &                      & 0  & 0  & 0                      \\ \hline
+\end{tabular}}
+\end{table}
+
+
+\section{Shortage as lost sales and backorder}
+\subsection*{Problem 4}
+Again, given all the data and rules above, you now need to come up with another ordering
+plan for the next coming six months. In particular, at the beginning of each month, you
+need to determine for each product how many to order through each of the three shipping\\
+
+Let\\
+
+\begin{equation*}
+\begin{aligned}
+\mbox{min} \quad &\sum_{t \in T}\sum_{k \in K}\sum_{i \in I}C_ix_{ikt} + H\sum_{i \in I}(C_i\sum_{t \in T}y_{it}^+) + \sum_{i \in I}(P_i-C_i)\sum_{t \in T}y_{it}^-\\ &+ \sum_{t\in T}^{}[\sum_{k\in K}^{}F_kz_{kt}+ \sum_{i \in I}^{}(\sum_{k=1}^{2} V_{ik}x_{ikt}+2750\times\lceil \frac{V_{i3}x_{i3t}}{30} \rceil)] + \sum_{i \in I}0.05P_iB_i\sum_{t \in T}y_{it}^-\\
+\mbox{s.t.} \quad
+&\sum_{i \in I}^{} x_{ikt} \leq \sum_{i \in I}^{}D_{i}z_{kt} \quad \forall k \in K, t \in T\\
+&z_{kt} \in \{0, 1\} \qquad \forall k \in K, t \in T\\
+&y_{i2} = I_{i}\qquad\forall i \in I\\
+&y_{it} = y_{i,t-1}+ \sum_{k \in K}^{} x_{i,k,t-k} - D_{it} + W_{it}\qquad \forall i \in I, t \in T\\
+&x_{ikt} = 0\qquad\forall i \in I, k \in K, t=0,1,2\\
+&y_{it}^+ \geq y_{it} \quad \forall i \in I \quad \forall t \in T\\
+&y_{it}^+ \geq 0  \quad \forall i \in I \quad \forall t \in T\\
+&y_{it}^- \geq -y_{it}  \quad \forall i \in I \quad \forall t \in T\\
+&y_{it}^- \geq 0  \quad \forall i \in I \quad \forall t \in T\\
+&y_{it} \quad urs. \quad \forall i \in I \quad \forall t \in T\\
+\end{aligned}
+\end{equation*}
+\begin{table}[]
+\setlength{\tabcolsep}{1mm}{
+\begin{tabular}{cccclccclccclccclccclccc}
+\hline
+        & \multicolumn{23}{c}{Order Quantity}                                                                                                                                               \\ \cline{2-24} 
+Product & \multicolumn{3}{c}{March} &  & \multicolumn{3}{c}{April} &  & \multicolumn{3}{c}{May} &  & \multicolumn{3}{c}{June} &  & \multicolumn{3}{c}{July} &  & \multicolumn{3}{c}{August} \\ \cline{2-4} \cline{6-8} \cline{10-12} \cline{14-16} \cline{18-20} \cline{22-24} 
+        & ED     & AF      & OF     &  & ED     & AF     & OF      &  & ED     & AF    & OF     &  & ED     & AF     & OF     &  & ED     & AF     & OF     &  & ED      & AF      & OF     \\ \hline
+1       & 0      & 0       & 0      &  & 0      & 0      & 0       &  & 0      & 0     & 0      &  & 0      & 38     & 0      &  & 0      & 0      & 0      &  & 0       & 0       & 0      \\
+2       & 0      & 0       & 0      &  & 0      & 0      & 0       &  & 0      & 0     & 0      &  & 0      & 0      & 0      &  & 0      & 0      & 0      &  & 0       & 0       & 0      \\
+3       & 0      & 0       & 0      &  & 0      & 0      & 82      &  & 0      & 0     & 200    &  & 0      & 0      & 0      &  & 0      & 0      & 0      &  & 0       & 0       & 0      \\
+4       & 0      & 0       & 0      &  & 0      & 0      & 0       &  & 0      & 0     & 0      &  & 0      & 0      & 0      &  & 0      & 0      & 0      &  & 0       & 0       & 0      \\
+5       & 0      & 0       & 0      &  & 0      & 0      & 0       &  & 0      & 0     & 0      &  & 0      & 0      & 0      &  & 0      & 0      & 0      &  & 0       & 0       & 0      \\
+6       & 0      & 0       & 0      &  & 0      & 0      & 0       &  & 0      & 0     & 144    &  & 0      & 10     & 0      &  & 0      & 0      & 0      &  & 0       & 0       & 0      \\
+7       & 0      & 0       & 0      &  & 0      & 0      & 0       &  & 0      & 0     & 0      &  & 0      & 0      & 0      &  & 0      & 0      & 0      &  & 0       & 0       & 0      \\
+8       & 0      & 0       & 61     &  & 0      & 0      & 168     &  & 0      & 0     & 32     &  & 0      & 0      & 0      &  & 0      & 0      & 0      &  & 0       & 0       & 0      \\
+9       & 0      & 0       & 0      &  & 0      & 0      & 0       &  & 0      & 0     & 94     &  & 0      & 0      & 0      &  & 0      & 0      & 0      &  & 0       & 0       & 0      \\
+10      & 24     & 162     & 200    &  & 0      & 0      & 129     &  & 0      & 25    & 0      &  & 0      & 0      & 0      &  & 0      & 0      & 0      &  & 0       & 0       & 0      \\ \hline
+\end{tabular}}
+\end{table}
+\end{document}
