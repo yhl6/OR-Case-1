@@ -130,9 +130,12 @@ eg1.addConstrs(Yn[i][t] >= -y[i][t] for i in ProductID for t in MonthID)
 eg1.addConstrs(Yn[i][t] <= -y[i][t] * (1-d[i][t]) for i in ProductID for t in MonthID)
 
 # Y的binary constraint
-eg1.addConstrs(d[i][t] <= y[i][t] for i in ProductID for t in MonthID)
-
-
+eg1.addConstrs(d[i][t] <= Yp[i][t] for i in ProductID for t in MonthID)
+"""
+for i in ProductID:
+    for t in MonthID:
+        y[i][t] = Yp[i][t] 
+"""
 eg1.addConstrs((y[i][0] == Initial_Inventory[i] - Demandlist[i][0] for i in ProductID), 'March')
 eg1.addConstrs((y[i][1] == Yp[i][0] + x[i][0][0] - Demandlist[i][1] + April_intransit[i] for i in ProductID), 'April')
 eg1.addConstrs((y[i][2] == Yp[i][1] + x[i][0][1] + x[i][1][0] - Demandlist[i][2] + May_intransit[i] for i in ProductID),
@@ -145,6 +148,16 @@ eg1.addConstrs(g[t] >= quicksum(Cubic_meter[i] * x[i][2][t] for i in ProductID)/
 eg1.addConstrs(g[t] <= quicksum(Cubic_meter[i] * x[i][2][t] for i in ProductID)/30 + 0.999999999999999999 for t in MonthID) 
 
 
+"""
+for i in ProductID:
+    for t in MonthID:
+        if(y[i][t] >= 0):
+            Yp[i][t] = y[i][t]
+            Yn = 0
+        else:
+            Yn[i][t] = -y[i][t]
+            Yp = 0
+"""
 eg1.optimize()
 
 print('z=', eg1.objVal)
@@ -161,7 +174,4 @@ for i in ProductID:
     for t in MonthID:
         print('Y-', i+1, t+3, Yn[i][t].x)
 
-for i in ProductID:
-    for k in Shipping_method:
-        for t in MonthID:
-            print('X', i + 1, k + 1, t + 3, x[i][k][t].x)
+
