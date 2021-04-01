@@ -6,12 +6,8 @@ ProductID = range(0, 10)  # 0-9
 ShippingID = range(0, 3)  # 0-2
 MonthID = range(0, 6)  # 0-5
 
-df = pd.read_excel('OR109-1_case01_data.xlsx')
 Demand = pd.read_excel('OR109-1_case01_data.xlsx', sheet_name='Demand')
 del Demand['Product']
-# for t in MonthID[3:]:
-#     print(Demand.columns[t][:3])
-
 
 # 初始存貨
 Ini_inv_df = pd.read_excel('OR109-1_case01_data.xlsx', 'Initial inventory')
