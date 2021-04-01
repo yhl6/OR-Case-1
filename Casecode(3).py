@@ -39,7 +39,7 @@ Cubic_meter = Size['Cubic meter']
 
 #售價、購買成本、期末持有成本
 Price_info = pd.read_excel('OR109-1_case01_data.xlsx','Price and cost')
-Sales = Price_info['Sales price']
+Sales_price = Price_info['Sales price']
 Purchasing_cost = Price_info['Purchasing cost']
 Holding_cost = Price_info['Holding']
 
@@ -97,17 +97,16 @@ for i in ProductID:
 #初始存貨 Initial_Inventory
 #運送費用 Express_delivery、Air_freight、Fixed_cost
 #在途存貨 May_intransit April_intransit
-#售價、購買成本、期末持有成本 Sales、Purchasing_cost、Holding_cost
+#售價、購買成本、期末持有成本 Sales_price、Purchasing_cost、Holding_cost
 
 eg1.setObjective(
     quicksum(Express_delivery[i] * x[i][0][t] for i in ProductID for t in MonthID)      #變動成本
-    +  quicksum(Air_freight[i] * x[i][1][t] for i in ProductID for t in MonthID)
-	+   quicksum(g[t] * 2750 for t in MonthID)
-    +   quicksum(Fixed_cost[k] * z[k][t] for k in Shipping_method for t in MonthID)      #固定成本
-    +    quicksum(Purchasing_cost[i] * x[i][k][t] for i in ProductID for k in Shipping_method      #購買成本
-           for t in MonthID)
-          + quicksum(Holding_cost[i] * y[i][t] for i in ProductID for t in MonthID)
-         , GRB.MINIMIZE)
+    + quicksum(Air_freight[i] * x[i][1][t] for i in ProductID for t in MonthID)
+	+ quicksum(g[t] * 2750 for t in MonthID)
+    + quicksum(Fixed_cost[k] * z[k][t] for k in Shipping_method for t in MonthID)      #固定成本
+    + quicksum(Purchasing_cost[i] * x[i][k][t] for i in ProductID for k in Shipping_method for t in MonthID)     #購買成本
+    + quicksum(Holding_cost[i] * Yp[i][t] for i in ProductID for t in MonthID)
+	+ quicksum((Sales_price[i] - Purchasing_cost[i]) * Yn[i][t] for i in ProductID for t in MonthID), GRB.MINIMIZE)
 
 # add constraints and name them
 eg1.addConstrs((y[i][0] == Initial_Inventory[i] - Demandlist[i][0] for i in ProductID),'March')
