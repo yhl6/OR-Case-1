@@ -1,6 +1,6 @@
 from gurobipy import *
 import pandas as pd
-import math
+
 
 df = pd.read_excel('OR109-1_case01_data.xlsx')
 Demand_info = pd.read_excel('OR109-1_case01_data.xlsx','Demand')
@@ -52,16 +52,10 @@ x = []
 count = []
 for i in ProductID:
 	x.append([])      #十個list
-	#count.append([])
-	
 	for k in Shipping_method:
 		x[i].append([])
-		#count[i].append([])      #三個list
-		
 		for t in MonthID:
 			x[i][k].append(eg1.addVar(lb = 0, vtype = GRB.CONTINUOUS, name = "x" + str(i+1)+ str(k)+ str(t+3)))
-			#count[i][k].append("x" + str(i+1)+ str(k+1)+ str(t))
-			
 
 #Z binary 變數
 z = []
